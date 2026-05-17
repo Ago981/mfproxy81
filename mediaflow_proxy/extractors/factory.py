@@ -28,7 +28,6 @@ from mediaflow_proxy.extractors.vidfast import VidFastExtractor
 from mediaflow_proxy.extractors.streamhg import StreamHGExtractor
 
 
-
 class ExtractorFactory:
     """Factory for creating URL extractors."""
 
@@ -57,7 +56,7 @@ class ExtractorFactory:
         "Voe": VoeExtractor,
         "Sportsonline": SportsonlineExtractor,
         "VidFast": VidFastExtractor,
-        "StreamHG": StreamHGExtractor
+        "StreamHG": StreamHGExtractor,
     }
 
     @classmethod
