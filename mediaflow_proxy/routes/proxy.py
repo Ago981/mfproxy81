@@ -491,36 +491,42 @@ async def _resolve_public_ip() -> str | None:
     return None
 
 
-_IP_DISCLOSURE_HEADERS = frozenset({
-    "x-forwarded-for",
-    "x-real-ip",
-    "x-client-ip",
-    "true-client-ip",
-    "forwarded",
-    "cf-connecting-ip",
-    "x-original-forwarded-for",
-    "x-cluster-client-ip",
-})
+_IP_DISCLOSURE_HEADERS = frozenset(
+    {
+        "x-forwarded-for",
+        "x-real-ip",
+        "x-client-ip",
+        "true-client-ip",
+        "forwarded",
+        "cf-connecting-ip",
+        "x-original-forwarded-for",
+        "x-cluster-client-ip",
+    }
+)
 
-_HOP_BY_HOP_HEADERS = frozenset({
-    "connection",
-    "keep-alive",
-    "proxy-authenticate",
-    "proxy-authorization",
-    "te",
-    "trailers",
-    "transfer-encoding",
-    "upgrade",
-})
+_HOP_BY_HOP_HEADERS = frozenset(
+    {
+        "connection",
+        "keep-alive",
+        "proxy-authenticate",
+        "proxy-authorization",
+        "te",
+        "trailers",
+        "transfer-encoding",
+        "upgrade",
+    }
+)
 
 # Headers that callers must not inject via h_* params — they enable host-header
 # injection, HTTP request smuggling, or break the session's own framing logic.
-_BLOCKED_REQUEST_HEADERS = frozenset({
-    "host",
-    "content-length",
-    "transfer-encoding",
-    "content-encoding",
-})
+_BLOCKED_REQUEST_HEADERS = frozenset(
+    {
+        "host",
+        "content-length",
+        "transfer-encoding",
+        "content-encoding",
+    }
+)
 
 
 def _check_forward_destination(destination: str) -> None:
@@ -623,11 +629,7 @@ async def proxy_forward_endpoint(
                 if len(resp_body) > max_response_bytes:
                     raise HTTPException(status_code=502, detail="Upstream response too large")
 
-                resp_headers = {
-                    k: v
-                    for k, v in upstream_resp.headers.items()
-                    if k.lower() not in _HOP_BY_HOP_HEADERS
-                }
+                resp_headers = {k: v for k, v in upstream_resp.headers.items() if k.lower() not in _HOP_BY_HOP_HEADERS}
                 resp_headers.update(proxy_headers.response)
 
                 return Response(
